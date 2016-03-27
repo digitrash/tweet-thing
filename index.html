@@ -10,23 +10,51 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
+        <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
     </head>
-    <body>
+    <body id="tweet-thing">
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <h1>Tweet Thing</h1>
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <div class="header">
+            <h1>Tweet Thing</h1>
+        </div>
+        <div class="main">
 
+            <div class="content">
+                Search for a Twitter user
+                <input type="text" id="search-input" maxlength="255"/>
+                <div id="search-results">
+                    <script id="content" type="text/ractive">
+                    {{#each searchResults}}
+                        <div class="user">
+                            <b>{{name}}</b> @{{screen_name}}
+                        </div>
+                    {{/each}}
+                    </script>
+                </div>
+            </div>
+        </div>
+        <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
+        <script>
+            window.tt = (function(tt) {
+                'use strict';
+                return tt;
+            })(window.tt || {});
+        </script>
         <script src="js/main.js"></script>
-
+        <script>
+            (function() {
+                new tt.TweetThing();
+            }());
+        </script>
     </body>
 </html>

@@ -115,7 +115,7 @@ body {
 }
 
 .main {
-    padding: 60px;
+    padding: 60px 10px;
     text-align: center;
 }
 
@@ -129,7 +129,7 @@ body {
 #input-box {
     position: relative;
     margin: 10px auto 0;
-    width: 80%;
+    width: 90%;
     max-width: 500px;
 }
 
@@ -143,11 +143,16 @@ body {
     font-weight: 400;
 }
 
-#spinner {
+#search-spinner {
     position: absolute;
     z-index: 2;
     right: -10px;
     top: 8px;
+    display: none;
+}
+
+#tweet-spinner {
+    margin-top: 10px;
     display: none;
 }
 
@@ -157,7 +162,7 @@ body {
     left: 14px;
     right: 0;
     margin: 0 auto;
-    width: 80%;
+    width: 90%;
     max-width: 500px;
     box-shadow: 2px 2px 6px rgba(0,0,0,0.25);
     background-color: #efefef;
@@ -227,10 +232,78 @@ body {
     color: #555;
 }
 
+#user-tweets {
+    width: 90%;
+    max-width: 960px;
+    margin: 0 auto;
+    text-align: left;
+    display: none;
+}
 
+#user-tweets .tweet {
+    padding: 10px;
+    border-bottom: 1px dotted rgba(0,0,0,.25);
+    font-size: .7em;
+}
 
+#user-tweets .tweet .photo {
+    height: 360px;
+    width: 540px;
+    margin: 10px 0;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    border: 1px solid;
+}
 
+#user-tweets .user {
+    min-height: 36px;
+    font-size: .9em;
+    line-height: 25px;
+}
 
+#user-tweets .user .pic {
+    height: 24px;
+    width: 24px;
+    background-size: 24px;
+    background-position: center;
+    border: 1px solid;
+    border-radius: 2px;
+    margin: 0 10px 10px 0;
+    float: left;
+}
+
+#user-tweets .stats {
+    margin-top: 4px;
+    font-size: .7em;
+    color: #aaa;
+}
+
+#user-tweets .stat {
+    display: inline-block;
+    border-right: 1px solid;
+    margin-right: 10px;
+    padding-right: 10px;
+}
+
+.subheading {
+    font-weight: 600;
+    font-size: 1.2em;
+    text-align: left;
+    line-height: 1.6em;
+}
+
+#empty-results {
+    display: none;
+}
+
+.retweet {
+    float: left;
+    margin-right: 8px;
+}
 
 
 /* ==========================================================================

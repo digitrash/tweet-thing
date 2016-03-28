@@ -7,12 +7,12 @@ tt.TweetThing = function() {
     // DOM elements
     this.$searchInput = $('#search-input');
     this.searchQuery = '';
-    this.$resultsDiv = $('#search-results');
-    this.$userProfile = $('#user-profile');
-    this.$spinner = $('#spinner');
+    this.$searchSpinner = $('#search-spinner');
+    this.$tweetsSpinner = $('#tweet-spinner');
 
     // data storage
     this.results = [];
+    this.tweets = [];
     this.selectedUser = {};
 
     this.apiBase = 'http://digitrash.com/tweet-thing/';
@@ -43,17 +43,16 @@ tt.TweetThing.prototype.listeners = function() {
 
 tt.TweetThing.prototype.onSearchInput = function() {
     if ((this.$searchInput.val() && this.$searchInput.val().length) && (this.$searchInput.val() != this.searchQuery)) {
-        this.$spinner.show();
+        this.$searchSpinner.show();
+        $('#search-results').hide();
         this.searchQuery = this.$searchInput.val();
         $.ajax(this.apiBase+"/user-search.php?q="+this.searchQuery)
             .done(function(data) {
                 this.results = data;
-                this.$spinner.hide();
+                this.$searchSpinner.hide();
+                $('#search-results').show();
                 if (this.results.length) {
-                    if (!this.$resultsDiv.length) {
-                        this.$resultsDiv = $('#search-results');
-                    }
-                    this.$resultsDiv.show();
+                    $('#empty-results').hide();
                     var liteResults = this.results.map(function(obj){
                        return {
                            'name': obj['name'],
@@ -65,7 +64,7 @@ tt.TweetThing.prototype.onSearchInput = function() {
                     this.ractive.set('searchResults', liteResults);
                 } else {
                     this.ractive.set('searchResults', []);
-                    this.$resultsDiv.hide();
+                    $('#empty-results').show();
                 }
             }.bind(this))
             .fail(function() {
@@ -98,8 +97,29 @@ tt.TweetThing.prototype.onResultSelect = function(e) {
 tt.TweetThing.prototype.showUserSummary = function() {
     console.log("showUserSummary=============>", this.selectedUser);
     this.ractive.set('user', this.selectedUser);
-    if (!this.$userProfile.length) {
-        this.$userProfile = $('#user-profile');
+    this.ractive.set('tweets', []);
+    $('#user-profile').show();
+    this.getUserTweets();
+};
+
+tt.TweetThing.prototype.getUserTweets = function() {
+    if (this.selectedUser) {
+        this.$tweetsSpinner.show();
+        $.ajax(this.apiBase+"/tweets.php?id="+this.selectedUser.id)
+            .done(function(data) {
+                this.tweets = data;
+                this.$tweetsSpinner.hide();
+                if (this.tweets.length) {
+                    $('#user-tweets').show();
+                    console.log("tweets =============>", this.tweets);
+                    this.ractive.set('tweets', this.tweets);
+                } else {
+                    this.ractive.set('tweets', []);
+                    $('#user-tweets').hide();
+                }
+            }.bind(this))
+            .fail(function() {
+                alert( "error" );
+            });
     }
-    this.$userProfile.show();
 };

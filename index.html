@@ -30,11 +30,14 @@
                 Search for a Twitter user
                 <div id="input-box">
                     <input type="text" id="search-input" maxlength="255"/>
-                    <img id="spinner" src="img/rolling.gif" width="28" height="28"/>
+                    <img id="search-spinner" src="img/rolling.gif" width="28" height="28"/>
                 </div>
                 <div id="template-area">
                     <script id="content" type="text/ractive">
                     <div id="search-results">
+                            <div id="empty-results" class="user">
+                                No Users Found
+                            </div>
                         {{#each searchResults:num}}
                             <div class="user" data-index="{{num}}" on-click="selectUser">
                                 <b>{{name}}</b> @{{screen_name}}
@@ -55,6 +58,26 @@
                             </div>
                         </div>
                     {{/user}}
+                    <img id="tweet-spinner" src="img/rolling.gif" width="28" height="28"/>
+                    <div id="user-tweets">
+                        Recent Tweets
+                        {{#each tweets:num}}
+                            <div class="tweet">
+                                <div class="user">
+                                    <div class="pic" style="background-image: url({{user.profile_image_url}})"></div>
+                                    <b>{{user.name}}</b> <a class="username" href="http://twitter.com/{{user.screen_name}}">@{{user.screen_name}}</a>
+                                    {{#if retweeted}}<img class="retweet" src="img/retweet.png" width="28" height="28"/>{{/if}}
+                                </div>
+                                {{text}}
+                                {{#if photo}}<div class="photo" style="background-image: url({{photo}})"></div>{{/if}}
+                                <div class="stats">
+                                    <span class="stat">Favorites: {{favorite_count}}</span>
+                                    <span class="stat">Retweets: {{retweet_count}}</span>
+                                    <span class="stat">Created: {{created_at}}</span>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
                     </script>
                 </div>
             </div>

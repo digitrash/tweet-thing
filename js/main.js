@@ -15,20 +15,24 @@ tt.TweetThing = function() {
     this.tweets = [];
     this.selectedUser = {};
 
+    // state
+    this.sortedByRetweets = false;
+
     this.apiBase = 'http://digitrash.com/tweet-thing/';
 
     this.ractive = new Ractive({
         // The `el` option can be a node, an ID, or a CSS selector.
         el: '#template-area',
         template: '#content',
-        // Here, we're passing in some initial data
         data: {
             searchResults: this.results,
-            user: this.selectedUser
+            user: this.selectedUser,
+            tweets: [],
+            showPhotos: true
         }
     });
 
-    // Limit to once per second, because Twitter Search API doesn't like it any faster
+    // Wait half-second after last keyup event
     this.debouncedSearchInput = _.debounce( this.onSearchInput.bind(this), 500, false );
 
     this.resetSearch();
@@ -39,6 +43,8 @@ tt.TweetThing = function() {
 tt.TweetThing.prototype.listeners = function() {
     this.$searchInput.on('keyup', this.debouncedSearchInput.bind(this));
     this.ractive.on('selectUser', this.onResultSelect.bind(this));
+    this.ractive.on('sortByRetweets', this.sortByRetweets.bind(this));
+    this.ractive.on('togglePhotos', this.togglePhotos.bind(this));
 };
 
 tt.TweetThing.prototype.onSearchInput = function() {
@@ -60,7 +66,6 @@ tt.TweetThing.prototype.onSearchInput = function() {
                            'id': obj['id']
                        };
                     });
-                    console.log("results, liteResults=============>", this.results, liteResults);
                     this.ractive.set('searchResults', liteResults);
                 } else {
                     this.ractive.set('searchResults', []);
@@ -86,7 +91,6 @@ tt.TweetThing.prototype.resetSearch = function() {
  */
 tt.TweetThing.prototype.onResultSelect = function(e) {
     var index = e.index.num;
-    console.log("onResultSelect=============>", e, index, this.results.length);
     if (index < this.results.length) {
         this.selectedUser = this.results[index];
         this.showUserSummary();
@@ -95,7 +99,6 @@ tt.TweetThing.prototype.onResultSelect = function(e) {
 };
 
 tt.TweetThing.prototype.showUserSummary = function() {
-    console.log("showUserSummary=============>", this.selectedUser);
     this.ractive.set('user', this.selectedUser);
     this.ractive.set('tweets', []);
     $('#user-profile').show();
@@ -111,7 +114,6 @@ tt.TweetThing.prototype.getUserTweets = function() {
                 this.$tweetsSpinner.hide();
                 if (this.tweets.length) {
                     $('#user-tweets').show();
-                    console.log("tweets =============>", this.tweets);
                     this.ractive.set('tweets', this.tweets);
                 } else {
                     this.ractive.set('tweets', []);
@@ -121,5 +123,32 @@ tt.TweetThing.prototype.getUserTweets = function() {
             .fail(function() {
                 alert( "error" );
             });
+    }
+};
+
+tt.TweetThing.prototype.sortByRetweets = function() {
+    if (this.tweets && !this.sortedByRetweets) {
+        this.tweets.sort(function(a,b) {
+            return b.retweet_count - a.retweet_count;
+        });
+        this.sortedByRetweets = true;
+        $('#retweet-filter').addClass('on');
+        this.ractive.set('tweets', this.tweets);
+    } else if (this.tweets && this.sortedByRetweets) {
+        this.sortedByRetweets = false;
+        $('#retweet-filter').removeClass('on');
+        this.tweets.sort(function(a,b) {
+            return a.index - b.index;
+        });
+    }
+};
+
+tt.TweetThing.prototype.togglePhotos = function() {
+    if (this.tweets && !this.ractive.get('showPhotos')) {
+        this.ractive.set('showPhotos', true);
+        $('#photo-filter').addClass('on');
+    } else if (this.tweets && this.ractive.get('showPhotos')) {
+        $('#photo-filter').removeClass('on');
+        this.ractive.set('showPhotos', false);
     }
 };

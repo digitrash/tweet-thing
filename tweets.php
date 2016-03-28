@@ -14,8 +14,12 @@ $results = $twitter->setGetfield($getfield)
              ->buildOauth($url, $requestMethod)
              ->performRequest();
 
-function process_tweets($tweet) {
+$resultsArr = json_decode($results);
+
+$i = 0;
+foreach ($resultsArr as &$tweet) {
     $data = array(
+        'index' => $i,
         'id' => $tweet->id,
         'created_at' => $tweet->created_at,
         'retweeted' => $tweet->retweeted,
@@ -24,18 +28,14 @@ function process_tweets($tweet) {
         'user' => ($tweet->retweeted ? $tweet->retweeted_status->user : $tweet->user),
         'text' => ($tweet->retweeted ? $tweet->retweeted_status->text : $tweet->text),
     );
-
     if ($tweet->entities->media && $tweet->entities->media[0]->type == 'photo') {
         $data['photo'] = $tweet->entities->media[0]->media_url;
     }
-    return $data;
+    $i++;
+    $tweet = $data;
 }
 
-$parsed_results = array_map("process_tweets", json_decode($results));
-
-$json = json_encode($parsed_results);
-
 header('Content-Type:application/json;charset=utf-8');
-echo $json;
+echo json_encode($resultsArr);
 
 ?>

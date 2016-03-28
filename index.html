@@ -61,6 +61,10 @@
                     <img id="tweet-spinner" src="img/rolling.gif" width="28" height="28"/>
                     <div id="user-tweets">
                         Recent Tweets
+                        <span class="filters">
+                            <span id="retweet-filter" class="filter" on-click="sortByRetweets">Sorted By Retweet Count</span>
+                            <span id="photo-filter" class="filter on" on-click="togglePhotos">Show Photos</span>
+                        </span>
                         {{#each tweets:num}}
                             <div class="tweet">
                                 <div class="user">
@@ -69,7 +73,7 @@
                                     {{#if retweeted}}<img class="retweet" src="img/retweet.png" width="28" height="28"/>{{/if}}
                                 </div>
                                 {{text}}
-                                {{#if photo}}<div class="photo" style="background-image: url({{photo}})"></div>{{/if}}
+                                {{#if photo && showPhotos}}<div class="photo" style="background-image: url({{photo}})"></div>{{/if}}
                                 <div class="stats">
                                     <span class="stat">Favorites: {{favorite_count}}</span>
                                     <span class="stat">Retweets: {{retweet_count}}</span>

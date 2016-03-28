@@ -289,6 +289,28 @@ body {
     padding-right: 10px;
 }
 
+#user-tweets .filters {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: .6em;
+}
+
+#user-tweets .filter {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: .8em;
+    border-radius: 4px;
+    padding: 3px 5px;
+    font-weight: 600;
+    color: #fff;
+    background: #ddd;
+    cursor: pointer;
+}
+
+#user-tweets .filter.on {
+    background: green;
+}
+
 .subheading {
     font-weight: 600;
     font-size: 1.2em;
